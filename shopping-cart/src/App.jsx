@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ProductList from './components/ProductList';
+import Cart from './components/Cart';
 
 function App() {
   const [products] = useState([
@@ -25,11 +26,15 @@ function App() {
     });
   }
 
+  function handleRemoveProduct(id) {
+    setCart((previousCart) => previousCart.filter((item) => item.id !== id));
+  }
+
   return (
     <main>
       <h1>Krepšelio sistema</h1>
       <ProductList products={products} onAdd={handleAddProduct} />
-      <p>Krepšelyje skirtingų prekių: {cart.length}</p>
+      <Cart cart={cart} onRemove={handleRemoveProduct} />
     </main>
   );
 }

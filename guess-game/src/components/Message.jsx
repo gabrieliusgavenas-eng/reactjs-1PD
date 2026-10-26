@@ -1,6 +1,6 @@
 function Message({ text, status }) {
   return (
-    <p className={`message ${status}`} role="status" aria-live="polite">
+    <p id="game-message" className={`message ${status}`} role="status" aria-live="polite">
       {text}
     </p>
   );

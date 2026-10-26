@@ -1,26 +1,25 @@
 import { useState } from 'react';
 import GuessForm from './GuessForm';
 import Message from './Message';
+import { evaluateGuess } from '../utils/evaluateGuess';
 
 function GuessGame() {
   const [secretNumber] = useState(() => Math.floor(Math.random() * 100) + 1);
   const [input, setInput] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [result, setResult] = useState({ text: '', status: 'idle' });
+  const hasWon = result.status === 'won';
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const guess = Number(input);
-    setAttempts((previousAttempts) => previousAttempts + 1);
+    if (hasWon) return;
 
-    if (guess === secretNumber) {
-      setResult({ text: 'Teisingai!', status: 'won' });
-    } else {
-      setResult({
-        text: guess > secretNumber ? 'Bandyk mažesnį' : 'Bandyk didesnį',
-        status: 'hint',
-      });
+    const nextResult = evaluateGuess(input, secretNumber);
+    setResult(nextResult);
+
+    if (nextResult.status !== 'error') {
+      setAttempts((previousAttempts) => previousAttempts + 1);
     }
   }
 
@@ -32,9 +31,12 @@ function GuessGame() {
         input={input}
         onInputChange={(event) => setInput(event.target.value)}
         onSubmit={handleSubmit}
+        disabled={hasWon}
+        hasError={result.status === 'error'}
       />
       <p className="attempts">Bandymų skaičius: <strong>{attempts}</strong></p>
       <Message text={result.text} status={result.status} />
+      {hasWon && <p>Norėdami pradėti naują žaidimą, perkraukite puslapį.</p>}
     </section>
   );
 }

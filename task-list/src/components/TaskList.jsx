@@ -15,6 +15,20 @@ function TaskList() {
     setTasks((previousTasks) => [...previousTasks, newTask]);
   }
 
+  function handleCompleteTask(id) {
+  setTasks((previousTasks) =>
+    previousTasks.map((task) =>
+      task.id === id ? { ...task, completed: true } : task
+    )
+  );
+}
+
+function handleDeleteTask(id) {
+  setTasks((previousTasks) =>
+    previousTasks.filter((task) => task.id !== id)
+  );
+}
+
   return (
     <section>
       <h1>Užduočių sąrašas</h1>
@@ -26,7 +40,12 @@ function TaskList() {
       ) : (
         <ul>
           {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
+            <TaskItem
+  key={task.id}
+  task={task}
+  onComplete={handleCompleteTask}
+  onDelete={handleDeleteTask}
+/>
           ))}
         </ul>
       )}
